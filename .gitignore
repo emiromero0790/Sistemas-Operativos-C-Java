@@ -1,1 +1,5 @@
-.exe
+# Ignorar archivos binarios ejecutables
+*.exe
+
+# Ignorar archivos de bytecode de Java
+*.class
