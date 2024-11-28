@@ -177,6 +177,56 @@ int main() {
 ```
 
 # Organización de memoria virtual
+1. Investiga y explica el concepto de "paginación" y "segmentación".
+¿Cuáles son las ventajas y desventajas de cada técnica?
+
+### Paginación
+Se trata de un modelo de organización de memoria física en el que se divide toda la memoria en porciones del mismo tamaño. Esas porciones reciben el nombre de marcos o páginas físicas. Si dividimos la memoria en páginas, podremos gestionarla mejor.
+
+Los marcos se identifican con un número que se denomina «número de página física«. A su vez, cada página física se asigna a un proceso de forma exclusiva. Por otro lado, cada proceso tiene un espacio de páginas lógicas, y cada una se mapea o se asocia a un marco.
+
+La tabla de páginas es el mapeo resultante entre páginas lógicas y físicas. Por tanto, cada proceso tiene su tabla de páginas.
+
+### Ventajas de la paginación
+* Es posible comenzar a ejecutar un programa, cargando solo una parte del mismo en memoria, y el resto se cargara bajo la solicitud.
+
+* No es necesario que las paginas estén contiguas en memoria, por lo que no se necesitan procesos de compactación cuando existen marcos de páginas libres dispersos en la memoria.
+
+* Es fácil controlar todas las páginas, ya que tienen el mismo tamaño.
+
+* El mecanismo de traducción de direcciones (DAT) permite separar los conceptos de espacio de direcciones y espacios de memoria. Todo el mecanismo es transparente al usuario.
+
+### Desventajas de la paginación
+* El costo de hardware y software se incrementa, por la nueva información que debe manejarse y el mecanismo de traducción de direcciones necesario. Se consumen muchos más recursos de memoria, tiempo en el CPU para su implantación.
+
+* Se deben reservar áreas de memoria para las PMT de los procesos. Al no ser fijo el tamaño de estas, se crea un problema semejante al de los programas (cómo asignar un tamaño óptimo sin desperdicio de memoria, u ovearhead del procesador).
+
+### Segmentación 
+La segmentación es una técnica de gestión de memoria que divide la memoria física de una computadora en segmentos de tamaño variable, cada uno de los cuales se puede asignar a un proceso o programa diferente. La segmentación permite un uso más eficiente de la memoria, la protección de los datos y el intercambio de código entre procesos. En este artículo, exploraremos los tipos de segmentación en los sistemas operativos y cómo se comparan con otras técnicas de administración de memoria, como la paginación o la memoria virtual.
+
+### Ventajas de la segmentación
+La segmentación tiene varias ventajas sobre otras técnicas de administración de memoria. En primer lugar, la segmentación permite la organización lógica de la memoria, ya que cada segmento puede corresponder a una unidad lógica de un programa, como una función, un módulo o una estructura de datos. Esto hace que sea más fácil para los programadores escribir y depurar código, y para el sistema operativo proteger y compartir segmentos entre procesos. En segundo lugar, la segmentación permite un uso eficiente de la memoria, ya que cada segmento se puede asignar y desasignar de acuerdo con las necesidades del proceso, y los segmentos se pueden reubicar en diferentes ubicaciones de la memoria sin afectar las direcciones lógicas del proceso. En tercer lugar, la segmentación permite el crecimiento dinámico de los segmentos, ya que los segmentos se pueden expandir o contraer en tiempo de ejecución, dependiendo de la disponibilidad de memoria y los requisitos del proceso.
+
+### DESVENTAJAS DE LA SEGMENTACIÓN
+* Se complica el manejo de memoria virtual.
+
+*El costo del Hardware y el Software se incrementa.
+
+*Mayor consumo de recursos: memoria, tiempo de CPU, etc.
+
+*Aparece el problema de Fragmentación Externa.
+
+2. Escribe un programa que simule una tabla de páginas para procesos
+con acceso aleatorio a memoria virtual.
+
+### Referencias APA
+Aller, Á. (2020, junio 10). ¿Cómo funciona la paginación de memoria? Profesional Review; Miguel Ángel Navas. https://www.profesionalreview.com/2020/06/10/como-funciona-la-paginacion-de-memoria/
+
+¿Cómo se compara la segmentación con otras técnicas de administración de memoria, como la paginación o la memoria virtual? (2023, marzo 4). Linkedin.com; www.linkedin.com. https://es.linkedin.com/advice/3/how-do-you-compare-segmentation-other-memory?lang=es
+
+Dominguez, A. (2016, abril 15). Paginación y segmentación. Operating Systems. https://sofilethings.wordpress.com/2016/04/15/paginacion-y-segmentacion/
+
+
 
 
 
