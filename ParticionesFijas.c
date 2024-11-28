@@ -57,7 +57,7 @@ void definir_particiones() {
     }
 }
 
-void asignar_proceso() {
+void asignar_por_primera_cabida() {
     int tamano;
     printf("Tamano del nuevo proceso (en KB): ");
     scanf("%d", &tamano);
@@ -109,7 +109,7 @@ int main() {
         scanf("%d", &opcion);
 
         switch (opcion) {
-            case 1: asignar_proceso(); break;
+            case 1: asignar_por_primera_cabida(); break;
             case 2: liberar_proceso(); break;
             case 3: mostrar_memoria(); break;
             case 4: return 0;
