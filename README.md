@@ -216,15 +216,212 @@ La segmentación tiene varias ventajas sobre otras técnicas de administración 
 
 *Aparece el problema de Fragmentación Externa.
 
-2. Escribe un programa que simule una tabla de páginas para procesos
-con acceso aleatorio a memoria virtual.
-
 ### Referencias APA
 Aller, Á. (2020, junio 10). ¿Cómo funciona la paginación de memoria? Profesional Review; Miguel Ángel Navas. https://www.profesionalreview.com/2020/06/10/como-funciona-la-paginacion-de-memoria/
 
 ¿Cómo se compara la segmentación con otras técnicas de administración de memoria, como la paginación o la memoria virtual? (2023, marzo 4). Linkedin.com; www.linkedin.com. https://es.linkedin.com/advice/3/how-do-you-compare-segmentation-other-memory?lang=es
 
 Dominguez, A. (2016, abril 15). Paginación y segmentación. Operating Systems. https://sofilethings.wordpress.com/2016/04/15/paginacion-y-segmentacion/
+
+
+2. Escribe un programa que simule una tabla de páginas para procesos
+con acceso aleatorio a memoria virtual.
+
+
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define NUM_PAGINAS 16    
+#define TAMANO_PAGINA 4096 
+#define NUM_MARCOS 8    
+
+
+typedef struct {
+    int marco;    
+    int presente; 
+} EntradaTablaPaginas;
+
+
+EntradaTablaPaginas tabla_paginas[NUM_PAGINAS];
+
+
+void inicializar_tabla_paginas() {
+    for (int i = 0; i < NUM_PAGINAS; i++) {
+        tabla_paginas[i].marco = -1;  
+        tabla_paginas[i].presente = 0; 
+    }
+}
+
+void cargar_pagina(int pagina, int *marcos_disponibles, int *num_marcos_libres) {
+    if (*num_marcos_libres == 0) {
+        printf("No hay marcos disponibles para cargar la pagina %d.\n", pagina);
+        return;
+    }
+
+    int marco = marcos_disponibles[--(*num_marcos_libres)];
+    tabla_paginas[pagina].marco = marco;
+    tabla_paginas[pagina].presente = 1;
+
+    printf("Pagina %d cargada en el marco %d.\n", pagina, marco);
+}
+
+void traducir_direccion(int direccion_logica, int *marcos_disponibles, int *num_marcos_libres) {
+    int pagina = direccion_logica / TAMANO_PAGINA; 
+    int desplazamiento = direccion_logica % TAMANO_PAGINA; 
+
+    printf("Accediendo a direccion logica: %d (Pagina: %d, Desplazamiento: %d)\n", 
+           direccion_logica, pagina, desplazamiento);
+
+    if (tabla_paginas[pagina].presente) {
+        int direccion_fisica = tabla_paginas[pagina].marco * TAMANO_PAGINA + desplazamiento;
+        printf("Direccion fisica: %d (Marco: %d, Desplazamiento: %d)\n", 
+               direccion_fisica, tabla_paginas[pagina].marco, desplazamiento);
+    } else {
+        printf("Fallo de pagina: La pagina %d no esta en memoria.\n", pagina);
+        cargar_pagina(pagina, marcos_disponibles, num_marcos_libres);
+    }
+}
+
+int main() {
+    int marcos_disponibles[NUM_MARCOS]; 
+    int num_marcos_libres = NUM_MARCOS;
+
+
+    for (int i = 0; i < NUM_MARCOS; i++) {
+        marcos_disponibles[i] = i;
+    }
+
+    inicializar_tabla_paginas();
+
+    srand(time(NULL)); 
+
+    int num_accesos;
+    printf("Numero de accesos aleatorios a generar: ");
+    scanf("%d", &num_accesos);
+
+    for (int i = 0; i < num_accesos; i++) {
+        int direccion_logica = rand() % (NUM_PAGINAS * TAMANO_PAGINA);
+        traducir_direccion(direccion_logica, marcos_disponibles, &num_marcos_libres);
+        printf("\n");
+    }
+
+    return 0;
+}
+
+```
+
+# Administración de memoria virtual
+Escribe un código que implemente el algoritmo de reemplazo de página
+"Least Recently Used" (LRU).
+```C
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PAGINAS 100  
+#define NUM_MARCOS 4    
+
+int buscar_pagina(int marcos[], int num_marcos, int pagina) {
+    for (int i = 0; i < num_marcos; i++) {
+        if (marcos[i] == pagina) {
+            return i;  
+        }
+    }
+    return -1; 
+}
+
+int encontrar_marco_lru(int tiempo[], int num_marcos) {
+    int lru = 0;  
+    for (int i = 1; i < num_marcos; i++) {
+        if (tiempo[i] < tiempo[lru]) {
+            lru = i;
+        }
+    }
+    return lru;
+}
+
+void simular_lru(int paginas[], int num_paginas, int num_marcos) {
+    int marcos[num_marcos];   
+    int tiempo[num_marcos];      
+    int fallos_pagina = 0;      
+    int reloj = 0;              
+
+    for (int i = 0; i < num_marcos; i++) {
+        marcos[i] = -1;
+        tiempo[i] = 0;
+    }
+
+    printf("\nReferencias de pagina y estado de memoria:\n");
+    printf("--------------------------------------------------------------------------------\n");
+    printf("| Pagina Referenciada | Fallo de Pagina | Estado de Memoria Fisica            |\n");
+    printf("--------------------------------------------------------------------------------\n");
+
+    for (int i = 0; i < num_paginas; i++) {
+        int pagina_actual = paginas[i];
+        reloj++;
+
+        int indice = buscar_pagina(marcos, num_marcos, pagina_actual);
+
+        if (indice != -1) {
+            tiempo[indice] = reloj;
+            printf("| %-20d | %-16s | ", pagina_actual, "No");
+        } else {
+            fallos_pagina++;
+            int marco_a_reemplazar;
+
+            bool marco_libre = false;
+            for (int j = 0; j < num_marcos; j++) {
+                if (marcos[j] == -1) {
+                    marco_libre = true;
+                    marco_a_reemplazar = j;
+                    break;
+                }
+            }
+
+            if (!marco_libre) {
+                marco_a_reemplazar = encontrar_marco_lru(tiempo, num_marcos);
+            }
+
+            marcos[marco_a_reemplazar] = pagina_actual;
+            tiempo[marco_a_reemplazar] = reloj;
+            printf("| %-20d | %-16s | ", pagina_actual, "Si");
+        }
+
+        for (int j = 0; j < num_marcos; j++) {
+            if (marcos[j] != -1) {
+                printf("%d ", marcos[j]);
+            } else {
+                printf("- ");
+            }
+        }
+        printf("|\n");
+    }
+
+    printf("--------------------------------------------------------------------------------\n");
+    printf("Total de fallos de pagina: %d\n", fallos_pagina);
+}
+
+int main() {
+    int num_paginas;
+    printf("Ingrese el numero de referencias de pagina: ");
+    scanf("%d", &num_paginas);
+
+    int paginas[num_paginas];
+    for (int i = 0; i < num_paginas; i++) {
+        printf("Ingrese la referencia de pagina °%d: ", i + 1);
+        scanf("%d", &paginas[i]);
+    }
+
+    printf("Numero de marcos en memoria fisica: %d\n", NUM_MARCOS);
+    simular_lru(paginas, num_paginas, NUM_MARCOS);
+
+    return 0;
+}
+
+```
+Diseña un diagrama que represente el proceso de traducción de direcciones
+virtuales a físicas en un sistema con memoria virtual.
 
 
 
