@@ -423,7 +423,7 @@ int main() {
 Diseña un diagrama que represente el proceso de traducción de direcciones
 virtuales a físicas en un sistema con memoria virtual.
 
-![Proceso de traducción de direcciones virtuales a físicas](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/direccionesvirtualesafisicas.png)
+
 
 
 
