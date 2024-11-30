@@ -426,8 +426,149 @@ virtuales a físicas en un sistema con memoria virtual.
 ![Diagrama de traducción de e direcciones
 virtuales a físicas](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/direccionesvirtualesafisicas.png)
 
+# Integración
+
+Analiza un sistema operativo moderno (por ejemplo, Linux o Windows)
+e identifica cómo administra la memoria virtual.
+
+## Linux
+
+1. Paginación y Segmentación
+Linux utiliza una combinación de paginación y segmentación para gestionar la memoria. La memoria se divide en bloques de tamaño fijo llamados páginas. Cada proceso en Linux tiene su propio espacio de direcciones virtuales, que se divide en segmentos y páginas. Esto proporciona una forma eficiente de gestionar la memoria y permite características como la memoria virtual y la protección de memoria.
+
+2. Memoria Virtual
+Linux utiliza la memoria virtual para dar a cada proceso la impresión de que tiene acceso a una gran cantidad de memoria, incluso si la memoria física real del sistema es limitada. Esto se logra a través de un sistema de paginación que mapea las direcciones de memoria virtuales a direcciones de memoria físicas.
+
+3. Swap (Intercambio)
+Cuando la memoria física se llena, Linux puede mover algunas páginas de memoria a un espacio en disco llamado espacio de intercambio o swap. Esto libera memoria física para otros procesos, pero puede ralentizar el sistema si se utiliza en exceso, ya que acceder al disco es mucho más lento que acceder a la memoria física. Para entender mejor cómo funciona el swap en Linux, puedes leer este artículo.
+
+4. Caché y Buffer
+Linux intenta utilizar toda la memoria física disponible de manera eficiente. Cualquier memoria que no esté siendo utilizada para procesos se utiliza para caché de disco y buffers. Esto ayuda a acelerar el acceso a los datos a los que se accede con frecuencia. Si un proceso necesita más memoria, Linux reducirá automáticamente el tamaño de la caché para liberar memoria. Para aprender más sobre cómo Linux usa la caché y los buffers, puedes consultar esta explicación.
+
+5. Asignación y Liberación de Memoria
+Linux proporciona una serie de llamadas al sistema para asignar y liberar memoria, como malloc(), calloc(), realloc() y free(). Estas funciones permiten a los procesos solicitar memoria dinámicamente en tiempo de ejecución. Para obtener más información sobre cómo se asigna y se libera memoria en Linux, puedes leer este artículo.
+
+6. OOM Killer
+Cuando el sistema se queda sin toda la memoria disponible (física y swap), el kernel de Linux activa un proceso especial llamado OOM Killer (Out of Memory Killer). Este proceso selecciona y mata otros procesos para liberar memoria, utilizando un algoritmo para determinar qué procesos son los mejores candidatos para ser matados.
 
 
+## Windows
+Espacio de direcciones: Cada proceso tiene un espacio virtual aislado. En sistemas de 32 bits, se divide típicamente en 2 GB para el núcleo y 2 GB para el usuario, aunque puede configurarse (por ejemplo, 3 GB/1 GB). En sistemas de 64 bits, el espacio es mucho mayor.
+
+Paginación por demanda: Windows carga en memoria física solo las páginas necesarias, acelerando la traducción con Translation Lookaside Buffers (TLBs).
+
+Archivo de paginación: Usa uno o más archivos de paginación (pagefile.sys) para mover páginas inactivas desde la memoria física, liberando espacio para procesos activos.
+
+Protección y seguridad: Cada página tiene permisos de acceso y Windows incluye mecanismos como DEP (Data Execution Prevention) para prevenir la ejecución de código en áreas de datos y ASLR (Address Space Layout Randomization) para mitigar ataques de memoria.
+
+Optimización: Ajusta dinámicamente el uso de memoria priorizando aplicaciones interactivas y críticas.
+
+
+## Referencias APA
+
+Ferrer, A. (s/f). Gestión automática de memoria en Linux - alberto@barrahome:~$. Barrahome.org. Recuperado el 30 de noviembre de 2024, de https://www.barrahome.org/gesti%C3%B3n-autom%C3%A1tica-de-memoria-en-linux/
+
+
+Realiza una simulación en cualquier lenguaje de programación que
+emule el swapping de procesos en memoria virtual.
+
+```C
+
+#include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_PROCESOS 5
+#define TAMANO_MEMORIA 100  
+
+typedef struct {
+    int id;
+    int tamano;     
+    bool en_memoria;  
+} Proceso;
+
+Proceso procesos[MAX_PROCESOS];
+int memoria_disponible = TAMANO_MEMORIA;
+
+void inicializar_procesos() {
+    for (int i = 0; i < MAX_PROCESOS; i++) {
+        procesos[i].id = i + 1;
+        printf("Introduce el tamanio del proceso %d (en KB): ", i + 1);
+        scanf("%d", &procesos[i].tamano);
+        procesos[i].en_memoria = false;
+    }
+}
+
+void mostrar_estado_memoria() {
+    printf("\n=== Estado de la memoria ===\n");
+    printf("Memoria disponible: %d KB\n", memoria_disponible);
+    printf("Procesos en memoria:\n");
+    for (int i = 0; i < MAX_PROCESOS; i++) {
+        if (procesos[i].en_memoria) {
+            printf("  - Proceso %d (%d KB)\n", procesos[i].id, procesos[i].tamano);
+        }
+    }
+    printf("\n");
+}
+
+void cargar_proceso(int id) {
+    if (procesos[id].tamano <= memoria_disponible) {
+        memoria_disponible -= procesos[id].tamano;
+        procesos[id].en_memoria = true;
+        printf("Proceso %d cargado en memoria.\n", procesos[id].id);
+    } else {
+        printf("No hay suficiente memoria para el proceso %d. Realizando swapping...\n", procesos[id].id);
+
+        for (int i = 0; i < MAX_PROCESOS; i++) {
+            if (procesos[i].en_memoria) {
+                printf("Sacando el proceso %d (%d KB) de la memoria.\n", procesos[i].id, procesos[i].tamano);
+                memoria_disponible += procesos[i].tamano;
+                procesos[i].en_memoria = false;
+                break;
+            }
+        }
+
+        cargar_proceso(id);
+    }
+}
+
+int main() {
+    int opcion, proceso_id;
+
+    inicializar_procesos();
+
+    while (1) {
+        printf("\n=== Menu ===\n");
+        printf("1. Mostrar estado de la memoria\n");
+        printf("2. Cargar un proceso en memoria\n");
+        printf("3. Salir\n");
+        printf("Elige una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                mostrar_estado_memoria();
+                break;
+            case 2:
+                printf("Introduce el ID del proceso a cargar (1-%d): ", MAX_PROCESOS);
+                scanf("%d", &proceso_id);
+                if (proceso_id < 1 || proceso_id > MAX_PROCESOS) {
+                    printf("ID de proceso invalido.\n");
+                } else {
+                    cargar_proceso(proceso_id - 1);
+                }
+                break;
+            case 3:
+                printf("Saliendo del programa...\n");
+                return 0;
+            default:
+                printf("Opcion invalida. Intenta de nuevo.\n");
+        }
+    }
+
+    return 0;
+}
+
+```
 
 
 
