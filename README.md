@@ -210,11 +210,11 @@ La segmentación tiene varias ventajas sobre otras técnicas de administración 
 ### DESVENTAJAS DE LA SEGMENTACIÓN
 * Se complica el manejo de memoria virtual.
 
-*El costo del Hardware y el Software se incrementa.
+* El costo del Hardware y el Software se incrementa.
 
-*Mayor consumo de recursos: memoria, tiempo de CPU, etc.
+* Mayor consumo de recursos: memoria, tiempo de CPU, etc.
 
-*Aparece el problema de Fragmentación Externa.
+* Aparece el problema de Fragmentación Externa.
 
 ### Referencias APA
 Aller, Á. (2020, junio 10). ¿Cómo funciona la paginación de memoria? Profesional Review; Miguel Ángel Navas. https://www.profesionalreview.com/2020/06/10/como-funciona-la-paginacion-de-memoria/
@@ -1113,7 +1113,7 @@ Diseña un flujo que describa el proceso de lectura de un archivo desde
 un disco magnético. Acompáñalo con un programa básico que simule
 el proceso.
 
-# Diagrama de flujo del prceso de lectura de un archivo desde un disco magnético
+# Diagrama de flujo del proceso de lectura de un archivo desde un disco magnético
 
 ![Diagrama de flujo](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/DiagramaProcesoDeLectura.png)
 
@@ -1177,6 +1177,71 @@ int main() {
 
     printf("\nIntentando leer 'archivo_no_existente.txt':\n");
     leer_archivo("archivo_no_existente.txt");
+
+    return 0;
+}
+
+```
+
+Implementa un programa en Python, C o java que realice operaciones
+de entrada/salida asíncronas usando archivos.
+
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+#define FILENAME "archivo.txt"
+#define BUF_SIZE 1024
+
+void async_read(int fd) {
+    char buffer[BUF_SIZE];
+    ssize_t bytes_read = read(fd, buffer, BUF_SIZE - 1);
+    
+    if (bytes_read < 0) {
+        perror("Error al leer archivo");
+        return;
+    }
+
+    buffer[bytes_read] = '\0';
+    printf("Datos leidos: %s\n", buffer);
+}
+
+void async_write(int fd) {
+    char buffer[] = "Esto es una operacion de escritura asincrona en el archivo.\n";
+
+    ssize_t bytes_written = write(fd, buffer, sizeof(buffer) - 1);
+    
+    if (bytes_written < 0) {
+        perror("Error al escribir archivo");
+        return;
+    }
+
+    printf("Datos escritos en el archivo.\n");
+}
+
+int main() {
+    int fd = open(FILENAME, O_RDWR | O_CREAT, 0644);
+    
+    if (fd == -1) {
+        perror("Error al abrir archivo");
+        return 1;
+    }
+
+    printf("Iniciando lectura asincrona...\n");
+    async_read(fd);
+
+    printf("Esperando que la lectura termine...\n");
+    sleep(1);
+
+    printf("Iniciando escritura asincrona...\n");
+    async_write(fd);
+
+    printf("Esperando que la escritura termine...\n");
+    sleep(1);
+
+    close(fd);
 
     return 0;
 }
