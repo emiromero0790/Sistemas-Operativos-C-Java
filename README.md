@@ -1113,6 +1113,10 @@ Diseña un flujo que describa el proceso de lectura de un archivo desde
 un disco magnético. Acompáñalo con un programa básico que simule
 el proceso.
 
+# Diagrama de flujo del prceso de lectura de un archivo desde un disco magnético
+
+![Diagrama de flujo](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/DiagramaProcesoDeLectura.png)
+
 ```C
 
 #include <stdio.h>
