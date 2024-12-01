@@ -570,6 +570,611 @@ int main() {
 
 ```
 
+# Administración de Entrada/Salida
+
+## Dispositivos y manejadores de dispositivos
+
+Explica la diferencia entre dispositivos de bloque y dispositivos de
+carácter. Da un ejemplo de cada uno.
+
+Dispositivos de bloque: se caracterizan por transferir la información en grupos de tamaño fijo, denominados bloques. Como ejemplo tenemos el disco magnético.
+Dispositivos de tipo carácter: pueden transmitir la información carácter a carácter. Ejemplo: un modem.
+
+## Referencias APA
+Sistemas Operativos II - Cuarta sesión. (s/f). Usal.es. Recuperado el 30 de noviembre de 2024, de http://avellano.fis.usal.es/~ssooii/sesion4.htm
 
 
+Diseña un programa que implemente un manejador de dispositivos sencillo
+para un dispositivo virtual de entrada.
 
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_BUFFER 256
+#define MAX_REQUESTS 5
+
+typedef struct {
+    int id;             
+    char data[MAX_BUFFER]; 
+    bool atendida;   
+} Request;
+
+Request requests[MAX_REQUESTS];
+int num_requests = 0;
+int next_request_id = 1;
+
+void dispositivo_virtual() {
+    if (num_requests >= MAX_REQUESTS) {
+        printf("La cola de solicitudes esta llena. No se pueden agregar mas solicitudes.\n");
+        return;
+    }
+
+    char input[MAX_BUFFER];
+    printf("Dispositivo virtual: Ingresa los datos: ");
+    fgets(input, MAX_BUFFER, stdin);
+    input[strcspn(input, "\n")] = '\0';
+
+    requests[num_requests].id = next_request_id++;
+    strncpy(requests[num_requests].data, input, MAX_BUFFER);
+    requests[num_requests].atendida = false;
+
+    num_requests++;
+    printf("Solicitud creada con ID %d.\n", requests[num_requests - 1].id);
+}
+
+
+void manejador_dispositivo() {
+    if (num_requests == 0) {
+        printf("No hay solicitudes en la cola para manejar.\n");
+        return;
+    }
+
+    for (int i = 0; i < num_requests; i++) {
+        if (!requests[i].atendida) {
+            printf("Manejando solicitud ID %d: Datos: %s\n", requests[i].id, requests[i].data);
+            requests[i].atendida = true;
+            break;
+        }
+    }
+}
+
+
+void mostrar_solicitudes() {
+    printf("\nEstado de las solicitudes:\n");
+    if (num_requests == 0) {
+        printf("No hay solicitudes.\n");
+        return;
+    }
+
+    for (int i = 0; i < num_requests; i++) {
+        printf("Solicitud ID %d: Datos: %s, Estado: %s\n",
+               requests[i].id,
+               requests[i].data,
+               requests[i].atendida ? "Atendida" : "Pendiente");
+    }
+}
+
+int main() {
+    int opcion;
+
+    while (1) {
+        printf("\nMenu del manejador de dispositivos:\n");
+        printf("1. Simular entrada del dispositivo\n");
+        printf("2. Manejar una solicitud\n");
+        printf("3. Mostrar estado de solicitudes\n");
+        printf("4. Salir\n");
+        printf("Elige una opcion: ");
+        scanf("%d", &opcion);
+        getchar(); 
+
+        switch (opcion) {
+            case 1:
+                dispositivo_virtual();
+                break;
+            case 2:
+                manejador_dispositivo();
+                break;
+            case 3:
+                mostrar_solicitudes();
+                break;
+            case 4:
+                printf("Saliendo del programa...\n");
+                return 0;
+            default:
+                printf("Opcion invalida. Intenta de nuevo.\n");
+        }
+    }
+    return 0;
+}
+
+```
+
+## Mecanismos y funciones de los manejadores de dispositivos
+
+Investiga qué es la interrupción por E/S y cómo la administra el sistema
+operativo. Escribe un ejemplo en pseudocódigo para simular este
+proceso.
+
+Básicamente una interrupción viene determinada por la ocurrencia de una señal externa que provoca la bifurcación a una dirección especifica de memoria, interrumpiendo momentáneamente la ejecución del programa. A partir de esa dirección se encuentra la rutina de tratamiento que se encarga de realizar la operación de E/S propiamente dicha, devolviendo después el control al punto interrumpido del programa. 
+
+## Referencias APA
+
+(S/f-c). Ucm.es. Recuperado el 1 de diciembre de 2024, de https://www.fdi.ucm.es/profesor/jjruz/web2/temas/Curso05_06/EC9.pdf
+
+
+## Pseudocódigo:
+```
+# Cola para gestionar solicitudes de E/S
+cola_interrupciones = []
+
+Función que simula la solicitud de E/S
+function solicitar_e/s(dispositivo, operacion):
+    print("Se solicita operación", operacion, "en el dispositivo", dispositivo)
+    # Agregar solicitud a la cola
+    cola_interrupciones.append((dispositivo, operacion))
+
+# Manejador de interrupciones
+function manejador_interrupcion():
+    if cola_interrupciones is not empty:
+        solicitud = cola_interrupciones.pop(0)  # Obtener la primera solicitud
+        dispositivo, operacion = solicitud
+        print("Atendiendo interrupción de E/S para el dispositivo", dispositivo)
+        # Simular tiempo de atención
+        esperar(2)
+        print("Operación", operacion, "completada en el dispositivo", dispositivo)
+    else:
+        print("No hay interrupciones pendientes.")
+
+# Simulación del sistema principal
+function sistema_principal():
+    while True:
+        print("\n1. Solicitar operación de E/S")
+        print("2. Atender interrupción")
+        print("3. Salir")
+        opcion = leer_entrada_usuario()
+
+        if opcion == 1:
+            dispositivo = leer("Introduce el dispositivo (teclado, disco, etc.): ")
+            operacion = leer("Introduce la operación (lectura, escritura, etc.): ")
+            solicitar_e/s(dispositivo, operacion)
+        elif opcion == 2:
+            manejador_interrupcion()
+        elif opcion == 3:
+            print("Saliendo del sistema...")
+            break
+        else:
+            print("Opción inválida.")
+
+```
+
+Escribe un programa que utilice el manejo de interrupciones en un
+sistema básico de simulación.
+
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_INTERRUPCIONES 10
+
+typedef struct {
+    int id;               
+    char dispositivo[50];   
+    char operacion[50];  
+    bool atendida;        
+} Interrupcion;
+
+Interrupcion cola[MAX_INTERRUPCIONES];
+int num_interrupciones = 0;
+int siguiente_id = 1;
+
+void generar_interrupcion() {
+    if (num_interrupciones >= MAX_INTERRUPCIONES) {
+        printf("Cola de interrupciones llena. No se pueden agregar mas interrupciones.\n");
+        return;
+    }
+
+    Interrupcion nueva;
+    nueva.id = siguiente_id++;
+    printf("Introduce el nombre del dispositivo: ");
+    scanf("%s", nueva.dispositivo);
+    printf("Introduce la operacion realizada: ");
+    scanf("%s", nueva.operacion);
+    nueva.atendida = false;
+
+    cola[num_interrupciones++] = nueva;
+    printf("Interrupcion generada: ID %d, Dispositivo: %s, Operacion: %s\n",
+           nueva.id, nueva.dispositivo, nueva.operacion);
+}
+
+void manejar_interrupcion() {
+    if (num_interrupciones == 0) {
+        printf("No hay interrupciones pendientes.\n");
+        return;
+    }
+
+    Interrupcion *interrupcion = &cola[0]; 
+    if (!interrupcion->atendida) {
+        printf("Atendiendo interrupcion ID %d, Dispositivo: %s, Operacion: %s\n",
+               interrupcion->id, interrupcion->dispositivo, interrupcion->operacion);
+        interrupcion->atendida = true;
+        printf("Interrupcion atendida.\n");
+    }
+
+    for (int i = 1; i < num_interrupciones; i++) {
+        cola[i - 1] = cola[i];
+    }
+    num_interrupciones--;
+}
+
+void mostrar_interrupciones() {
+    printf("\nEstado de las interrupciones:\n");
+    if (num_interrupciones == 0) {
+        printf("No hay interrupciones en la cola.\n");
+        return;
+    }
+
+    for (int i = 0; i < num_interrupciones; i++) {
+        printf("ID %d: Dispositivo: %s, Operacion: %s, Estado: %s\n",
+               cola[i].id, cola[i].dispositivo, cola[i].operacion,
+               cola[i].atendida ? "Atendida" : "Pendiente");
+    }
+}
+
+int main() {
+    int opcion;
+
+    while (1) {
+        printf("\nMenu del sistema de manejo de interrupciones:\n");
+        printf("1. Generar interrupcion\n");
+        printf("2. Manejar interrupcion\n");
+        printf("3. Mostrar estado de interrupciones\n");
+        printf("4. Salir\n");
+        printf("Elige una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                generar_interrupcion();
+                break;
+            case 2:
+                manejar_interrupcion();
+                break;
+            case 3:
+                mostrar_interrupciones();
+                break;
+            case 4:
+                printf("Saliendo del programa...\n");
+                return 0;
+            default:
+                printf("Opcion invalida. Intenta de nuevo.\n");
+        }
+    }
+    return 0;
+}
+
+```
+
+## Estructura de datos para manejos de dispositivos
+Investiga y explica qué es una cola de E/S. Diseña una simulación de
+una cola con prioridad.
+
+Una cola de E/S (entrada/salida) es una estructura de datos utilizada por los sistemas operativos para organizar y gestionar las solicitudes de acceso a dispositivos de entrada y salida, como discos, impresoras, teclados, etc.
+
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#define MAX_COLA 10
+
+typedef struct {
+    int id;        
+    int prioridad;  
+} Elemento;
+
+typedef struct {
+    Elemento elementos[MAX_COLA];
+    int tamanio;
+} ColaPrioridad;
+
+void inicializar_cola(ColaPrioridad *cola) {
+    cola->tamanio = 0;
+}
+
+bool esta_vacia(ColaPrioridad *cola) {
+    return cola->tamanio == 0;
+}
+
+bool esta_llena(ColaPrioridad *cola) {
+    return cola->tamanio == MAX_COLA;
+}
+
+void agregar_elemento(ColaPrioridad *cola, int id, int prioridad) {
+    if (esta_llena(cola)) {
+        printf("La cola esta llena. No se puede agregar mas elementos.\n");
+        return;
+    }
+
+    int i = cola->tamanio - 1;
+    while (i >= 0 && cola->elementos[i].prioridad < prioridad) {
+        cola->elementos[i + 1] = cola->elementos[i]; 
+        i--;
+    }
+
+    cola->elementos[i + 1].id = id;
+    cola->elementos[i + 1].prioridad = prioridad;
+    cola->tamanio++;
+
+    printf("Elemento ID %d con prioridad %d agregado.\n", id, prioridad);
+}
+
+void atender_elemento(ColaPrioridad *cola) {
+    if (esta_vacia(cola)) {
+        printf("La cola esta vacia. No hay elementos para atender.\n");
+        return;
+    }
+
+    Elemento atendido = cola->elementos[0];
+    printf("Atendiendo elemento ID %d con prioridad %d.\n", atendido.id, atendido.prioridad);
+
+    for (int i = 1; i < cola->tamanio; i++) {
+        cola->elementos[i - 1] = cola->elementos[i];
+    }
+    cola->tamanio--;
+}
+
+void mostrar_cola(ColaPrioridad *cola) {
+    if (esta_vacia(cola)) {
+        printf("La cola esta vacia.\n");
+        return;
+    }
+
+    printf("Estado de la cola:\n");
+    for (int i = 0; i < cola->tamanio; i++) {
+        printf("ID: %d, Prioridad: %d\n", cola->elementos[i].id, cola->elementos[i].prioridad);
+    }
+}
+
+int main() {
+    ColaPrioridad cola;
+    inicializar_cola(&cola);
+
+    int opcion, id, prioridad;
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Agregar elemento\n");
+        printf("2. Atender elemento\n");
+        printf("3. Mostrar cola\n");
+        printf("4. Salir\n");
+        printf("Elige una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("Introduce el ID del elemento: ");
+                scanf("%d", &id);
+                printf("Introduce la prioridad del elemento: ");
+                scanf("%d", &prioridad);
+                agregar_elemento(&cola, id, prioridad);
+                break;
+            case 2:
+                atender_elemento(&cola);
+                break;
+            case 3:
+                mostrar_cola(&cola);
+                break;
+            case 4:
+                printf("Saliendo...\n");
+                return 0;
+            default:
+                printf("Opcion invalida. Intenta de nuevo.\n");
+        }
+    }
+
+    return 0;
+}
+
+```
+
+
+Escribe un programa que simule las operaciones de un manejador de
+dispositivos utilizando una tabla de estructuras.
+
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#define MAX_DISPOSITIVOS 10
+#define MAX_NOMBRE 20
+
+typedef struct {
+    int id;                    
+    char nombre[MAX_NOMBRE];   
+    bool en_uso;              
+} Dispositivo;
+
+Dispositivo tabla_dispositivos[MAX_DISPOSITIVOS];
+int total_dispositivos = 0;
+
+void agregar_dispositivo(int id, const char *nombre) {
+    if (total_dispositivos >= MAX_DISPOSITIVOS) {
+        printf("La tabla de dispositivos esta llena. No se pueden agregar mas dispositivos.\n");
+        return;
+    }
+    tabla_dispositivos[total_dispositivos].id = id;
+    strncpy(tabla_dispositivos[total_dispositivos].nombre, nombre, MAX_NOMBRE - 1);
+    tabla_dispositivos[total_dispositivos].en_uso = false;
+    total_dispositivos++;
+    printf("Dispositivo '%s' agregado con ID %d.\n", nombre, id);
+}
+
+void mostrar_dispositivos() {
+    printf("\nEstado actual de los dispositivos:\n");
+    printf("ID\tNombre\t\tEstado\n");
+    printf("----------------------------------\n");
+    for (int i = 0; i < total_dispositivos; i++) {
+        printf("%d\t%s\t\t%s\n", tabla_dispositivos[i].id, 
+                                 tabla_dispositivos[i].nombre, 
+                                 tabla_dispositivos[i].en_uso ? "En uso" : "Disponible");
+    }
+}
+
+void asignar_dispositivo(int id) {
+    for (int i = 0; i < total_dispositivos; i++) {
+        if (tabla_dispositivos[i].id == id) {
+            if (tabla_dispositivos[i].en_uso) {
+                printf("El dispositivo '%s' ya esta en uso.\n", tabla_dispositivos[i].nombre);
+            } else {
+                tabla_dispositivos[i].en_uso = true;
+                printf("El dispositivo '%s' ha sido asignado.\n", tabla_dispositivos[i].nombre);
+            }
+            return;
+        }
+    }
+    printf("No se encontro un dispositivo con ID %d.\n", id);
+}
+
+void liberar_dispositivo(int id) {
+    for (int i = 0; i < total_dispositivos; i++) {
+        if (tabla_dispositivos[i].id == id) {
+            if (tabla_dispositivos[i].en_uso) {
+                tabla_dispositivos[i].en_uso = false;
+                printf("El dispositivo '%s' ha sido liberado.\n", tabla_dispositivos[i].nombre);
+            } else {
+                printf("El dispositivo '%s' ya estaba disponible.\n", tabla_dispositivos[i].nombre);
+            }
+            return;
+        }
+    }
+    printf("No se encontro un dispositivo con ID %d.\n", id);
+}
+
+int main() {
+    int opcion, id;
+    char nombre[MAX_NOMBRE];
+
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Agregar dispositivo\n");
+        printf("2. Mostrar dispositivos\n");
+        printf("3. Asignar dispositivo\n");
+        printf("4. Liberar dispositivo\n");
+        printf("5. Salir\n");
+        printf("Elige una opcion: ");
+        scanf("%d", &opcion);
+
+        switch (opcion) {
+            case 1:
+                printf("Introduce el ID del dispositivo: ");
+                scanf("%d", &id);
+                printf("Introduce el nombre del dispositivo: ");
+                scanf("%s", nombre);
+                agregar_dispositivo(id, nombre);
+                break;
+            case 2:
+                mostrar_dispositivos();
+                break;
+            case 3:
+                printf("Introduce el ID del dispositivo a asignar: ");
+                scanf("%d", &id);
+                asignar_dispositivo(id);
+                break;
+            case 4:
+                printf("Introduce el ID del dispositivo a liberar: ");
+                scanf("%d", &id);
+                liberar_dispositivo(id);
+                break;
+            case 5:
+                printf("Saliendo...\n");
+                return 0;
+            default:
+                printf("Opcion invalida. Intenta de nuevo.\n");
+        }
+    }
+
+    return 0;
+}
+
+```
+
+## Operaciones de Entrada/Salida
+
+Diseña un flujo que describa el proceso de lectura de un archivo desde
+un disco magnético. Acompáñalo con un programa básico que simule
+el proceso.
+
+```C
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_ARCHIVOS 5
+#define TAMANO_BLOQUE 512  
+
+typedef struct {
+    char nombre[50];
+    int bloques_inicio;  
+    int tamano;        
+} Archivo;
+
+Archivo disco_virtual[MAX_ARCHIVOS];
+int num_archivos = 0;
+
+void leer_disco(int bloque_inicio, int tamano) {
+    printf("Leyendo %d bytes desde el bloque %d del disco...\n", tamano, bloque_inicio);
+    printf("Simulacion: Los datos se han cargado en memoria.\n");
+}
+
+void registrar_archivo(const char *nombre, int bloques_inicio, int tamano) {
+    if (num_archivos >= MAX_ARCHIVOS) {
+        printf("El disco virtual esta lleno. No se pueden registrar mas archivos.\n");
+        return;
+    }
+    strncpy(disco_virtual[num_archivos].nombre, nombre, sizeof(disco_virtual[num_archivos].nombre) - 1);
+    disco_virtual[num_archivos].bloques_inicio = bloques_inicio;
+    disco_virtual[num_archivos].tamano = tamano;
+    num_archivos++;
+    printf("Archivo '%s' registrado. Inicio en bloque %d, Tamano %d bytes.\n", nombre, bloques_inicio, tamano);
+}
+
+
+void leer_archivo(const char *nombre) {
+    for (int i = 0; i < num_archivos; i++) {
+        if (strcmp(disco_virtual[i].nombre, nombre) == 0) {
+            printf("Archivo encontrado: '%s'. Localizando en disco...\n", nombre);
+            leer_disco(disco_virtual[i].bloques_inicio, disco_virtual[i].tamano);
+            return;
+        }
+    }
+    printf("Archivo '%s' no encontrado en el disco.\n", nombre);
+}
+
+int main() {
+    registrar_archivo("archivo1.txt", 10, 2048);
+    registrar_archivo("archivo2.dat", 20, 1024);
+    registrar_archivo("imagen.png", 30, 5120);
+
+    printf("\nIntentando leer 'archivo1.txt':\n");
+    leer_archivo("archivo1.txt");
+
+    printf("\nIntentando leer 'imagen.png':\n");
+    leer_archivo("imagen.png");
+
+    printf("\nIntentando leer 'archivo_no_existente.txt':\n");
+    leer_archivo("archivo_no_existente.txt");
+
+    return 0;
+}
+
+```

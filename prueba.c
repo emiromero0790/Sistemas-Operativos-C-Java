@@ -1,93 +1,61 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
-#define MAX_PROCESOS 5
-#define TAMANO_MEMORIA 100  
+#define MAX_ARCHIVOS 5
+#define TAMANO_BLOQUE 512  
 
 typedef struct {
-    int id;
-    int tamano;     
-    bool en_memoria;  
-} Proceso;
+    char nombre[50];
+    int bloques_inicio;  
+    int tamano;        
+} Archivo;
 
-Proceso procesos[MAX_PROCESOS];
-int memoria_disponible = TAMANO_MEMORIA;
+Archivo disco_virtual[MAX_ARCHIVOS];
+int num_archivos = 0;
 
-void inicializar_procesos() {
-    for (int i = 0; i < MAX_PROCESOS; i++) {
-        procesos[i].id = i + 1;
-        printf("Introduce el tamanio del proceso %d (en KB): ", i + 1);
-        scanf("%d", &procesos[i].tamano);
-        procesos[i].en_memoria = false;
-    }
+void leer_disco(int bloque_inicio, int tamano) {
+    printf("Leyendo %d bytes desde el bloque %d del disco...\n", tamano, bloque_inicio);
+    printf("Simulacion: Los datos se han cargado en memoria.\n");
 }
 
-void mostrar_estado_memoria() {
-    printf("\n=== Estado de la memoria ===\n");
-    printf("Memoria disponible: %d KB\n", memoria_disponible);
-    printf("Procesos en memoria:\n");
-    for (int i = 0; i < MAX_PROCESOS; i++) {
-        if (procesos[i].en_memoria) {
-            printf("  - Proceso %d (%d KB)\n", procesos[i].id, procesos[i].tamano);
-        }
+void registrar_archivo(const char *nombre, int bloques_inicio, int tamano) {
+    if (num_archivos >= MAX_ARCHIVOS) {
+        printf("El disco virtual esta lleno. No se pueden registrar mas archivos.\n");
+        return;
     }
-    printf("\n");
+    strncpy(disco_virtual[num_archivos].nombre, nombre, sizeof(disco_virtual[num_archivos].nombre) - 1);
+    disco_virtual[num_archivos].bloques_inicio = bloques_inicio;
+    disco_virtual[num_archivos].tamano = tamano;
+    num_archivos++;
+    printf("Archivo '%s' registrado. Inicio en bloque %d, Tamano %d bytes.\n", nombre, bloques_inicio, tamano);
 }
 
-void cargar_proceso(int id) {
-    if (procesos[id].tamano <= memoria_disponible) {
-        memoria_disponible -= procesos[id].tamano;
-        procesos[id].en_memoria = true;
-        printf("Proceso %d cargado en memoria.\n", procesos[id].id);
-    } else {
-        printf("No hay suficiente memoria para el proceso %d. Realizando swapping...\n", procesos[id].id);
 
-        for (int i = 0; i < MAX_PROCESOS; i++) {
-            if (procesos[i].en_memoria) {
-                printf("Sacando el proceso %d (%d KB) de la memoria.\n", procesos[i].id, procesos[i].tamano);
-                memoria_disponible += procesos[i].tamano;
-                procesos[i].en_memoria = false;
-                break;
-            }
+void leer_archivo(const char *nombre) {
+    for (int i = 0; i < num_archivos; i++) {
+        if (strcmp(disco_virtual[i].nombre, nombre) == 0) {
+            printf("Archivo encontrado: '%s'. Localizando en disco...\n", nombre);
+            leer_disco(disco_virtual[i].bloques_inicio, disco_virtual[i].tamano);
+            return;
         }
-
-        cargar_proceso(id);
     }
+    printf("Archivo '%s' no encontrado en el disco.\n", nombre);
 }
 
 int main() {
-    int opcion, proceso_id;
+    registrar_archivo("archivo1.txt", 10, 2048);
+    registrar_archivo("archivo2.dat", 20, 1024);
+    registrar_archivo("imagen.png", 30, 5120);
 
-    inicializar_procesos();
+    printf("\nIntentando leer 'archivo1.txt':\n");
+    leer_archivo("archivo1.txt");
 
-    while (1) {
-        printf("\n=== Menu ===\n");
-        printf("1. Mostrar estado de la memoria\n");
-        printf("2. Cargar un proceso en memoria\n");
-        printf("3. Salir\n");
-        printf("Elige una opcion: ");
-        scanf("%d", &opcion);
+    printf("\nIntentando leer 'imagen.png':\n");
+    leer_archivo("imagen.png");
 
-        switch (opcion) {
-            case 1:
-                mostrar_estado_memoria();
-                break;
-            case 2:
-                printf("Introduce el ID del proceso a cargar (1-%d): ", MAX_PROCESOS);
-                scanf("%d", &proceso_id);
-                if (proceso_id < 1 || proceso_id > MAX_PROCESOS) {
-                    printf("ID de proceso invalido.\n");
-                } else {
-                    cargar_proceso(proceso_id - 1);
-                }
-                break;
-            case 3:
-                printf("Saliendo del programa...\n");
-                return 0;
-            default:
-                printf("Opcion invalida. Intenta de nuevo.\n");
-        }
-    }
+    printf("\nIntentando leer 'archivo_no_existente.txt':\n");
+    leer_archivo("archivo_no_existente.txt");
 
     return 0;
 }
