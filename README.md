@@ -1,6 +1,5 @@
 # REPOSITORIO SISTEMAS OPERATIVOS
-<div style="background-color: lightblue; color: black; padding: 10px; border-radius: 5px;">
-or: Emiliano Romero García
+Por: Emiliano Romero García
 
 # Política y filosofía
 1. ¿Cuál es la diferencia entre fragmentación interna y externa? Explica
@@ -1516,5 +1515,4 @@ Beneficios del uso de caché en E/S:
 
 a:, E. E. U. (s/f). Gestión de los recursos de un sistema operativo. Mheducation.es. Recuperado el 1 de diciembre de 2024, de https://www.mheducation.es/bcv/guide/capitulo/8448180321.pdf
 
-</div>
 
