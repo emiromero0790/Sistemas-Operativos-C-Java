@@ -2,6 +2,7 @@
 Por: Emiliano Romero García
 
 # Política y filosofía
+<div style="text-align: justify;">
 1. ¿Cuál es la diferencia entre fragmentación interna y externa? Explica
 cómo cada una afecta el rendimiento de la memoria.
 La fragmentación interna es un tipo de fragmentación que tiene lugar cuando se asigna una memoria más grande a un programa en lugar de la requerida. Aquí el espacio libre se conoce como fragmentación interna. Por otro lado, la fragmentación externa es el tipo de espacio libre que se forma entre bloques de memoria no contagiosos.
