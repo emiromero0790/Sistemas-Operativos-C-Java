@@ -1,8 +1,8 @@
 # REPOSITORIO SISTEMAS OPERATIVOS
-Por: Emiliano Romero García
+<div style="background-color: lightblue; color: black; padding: 10px; border-radius: 5px;">
+or: Emiliano Romero García
 
 # Política y filosofía
-<div style="text-align: justify;">
 1. ¿Cuál es la diferencia entre fragmentación interna y externa? Explica
 cómo cada una afecta el rendimiento de la memoria.
 La fragmentación interna es un tipo de fragmentación que tiene lugar cuando se asigna una memoria más grande a un programa en lugar de la requerida. Aquí el espacio libre se conoce como fragmentación interna. Por otro lado, la fragmentación externa es el tipo de espacio libre que se forma entre bloques de memoria no contagiosos.
@@ -1248,3 +1248,273 @@ int main() {
 }
 
 ```
+# Integración
+
+Escribe un programa que implemente el algoritmo de planificación de
+discos "Elevator (SCAN)".
+
+``` C
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_CILINDROS 100
+
+void elevator_scan(int solicitudes[], int num_solicitudes, int cabeza, int direccion) {
+    int i, j;
+    int mov = 0;
+    int izquierda[MAX_CILINDROS], derecha[MAX_CILINDROS];
+    int num_izquierda = 0, num_derecha = 0;
+
+    for (i = 0; i < num_solicitudes; i++) {
+        if (solicitudes[i] < cabeza) {
+            izquierda[num_izquierda++] = solicitudes[i];
+        } else {
+            derecha[num_derecha++] = solicitudes[i];
+        }
+    }
+
+    for (i = 0; i < num_izquierda - 1; i++) {
+        for (j = i + 1; j < num_izquierda; j++) {
+            if (izquierda[i] < izquierda[j]) {
+                int temp = izquierda[i];
+                izquierda[i] = izquierda[j];
+                izquierda[j] = temp;
+            }
+        }
+    }
+
+    for (i = 0; i < num_derecha - 1; i++) {
+        for (j = i + 1; j < num_derecha; j++) {
+            if (derecha[i] > derecha[j]) {
+                int temp = derecha[i];
+                derecha[i] = derecha[j];
+                derecha[j] = temp;
+            }
+        }
+    }
+
+    if (direccion == 1) {
+        for (i = 0; i < num_derecha; i++) {
+            mov += abs(cabeza - derecha[i]);
+            cabeza = derecha[i];
+        }
+
+        cabeza = derecha[num_derecha - 1];
+        for (i = num_izquierda - 1; i >= 0; i--) {
+            mov += abs(cabeza - izquierda[i]);
+            cabeza = izquierda[i];
+        }
+    } else {
+        for (i = num_izquierda - 1; i >= 0; i--) {
+            mov += abs(cabeza - izquierda[i]);
+            cabeza = izquierda[i];
+        }
+
+        cabeza = izquierda[0];
+        for (i = 0; i < num_derecha; i++) {
+            mov += abs(cabeza - derecha[i]);
+            cabeza = derecha[i];
+        }
+    }
+
+    printf("Movimientos totales: %d\n", mov);
+}
+
+int main() {
+    int solicitudes[MAX_CILINDROS];
+    int num_solicitudes;
+    int cabeza, direccion;
+
+    printf("Ingrese el numero de solicitudes: ");
+    scanf("%d", &num_solicitudes);
+
+    printf("Ingrese las solicitudes de acceso al disco:\n");
+    for (int i = 0; i < num_solicitudes; i++) {
+        printf("Solicitud %d: ", i + 1);
+        scanf("%d", &solicitudes[i]);
+    }
+
+    printf("Ingrese la posicion inicial de la cabeza del disco: ");
+    scanf("%d", &cabeza);
+
+    printf("Ingrese la direccion (1 para derecha, 0 para izquierda): ");
+    scanf("%d", &direccion);
+
+    elevator_scan(solicitudes, num_solicitudes, cabeza, direccion);
+
+    return 0;
+}
+
+```
+Diseña un sistema que maneje múltiples dispositivos simulados (disco
+duro, impresora, teclado) y muestra cómo se realiza la comunicación
+entre ellos.
+
+```C
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_SOLICITUDES 5
+
+typedef struct {
+    int id;
+    char solicitud[100];
+    int estado; 
+} Dispositivo;
+
+
+typedef struct {
+    Dispositivo disco;
+    Dispositivo impresora;
+    Dispositivo teclado;
+} ManejadorDispositivos;
+
+
+void inicializarDispositivos(ManejadorDispositivos *manejador) {
+    manejador->disco.id = 1;
+    strcpy(manejador->disco.solicitud, "");
+    manejador->disco.estado = 0;
+
+    manejador->impresora.id = 2;
+    strcpy(manejador->impresora.solicitud, "");
+    manejador->impresora.estado = 0;
+
+    manejador->teclado.id = 3;
+    strcpy(manejador->teclado.solicitud, "");
+    manejador->teclado.estado = 0;
+}
+
+
+void mostrarEstado(ManejadorDispositivos *manejador) {
+    printf("Estado de los dispositivos:\n");
+    printf("Disco: %s\n", manejador->disco.estado == 0 ? "No solicitado" : (manejador->disco.estado == 1 ? "En proceso" : "Completado"));
+    printf("Impresora: %s\n", manejador->impresora.estado == 0 ? "No solicitado" : (manejador->impresora.estado == 1 ? "En proceso" : "Completado"));
+    printf("Teclado: %s\n", manejador->teclado.estado == 0 ? "No solicitado" : (manejador->teclado.estado == 1 ? "En proceso" : "Completado"));
+}
+
+
+void solicitarOperacion(ManejadorDispositivos *manejador, int dispositivo, const char *solicitud) {
+    switch (dispositivo) {
+        case 1:
+            strcpy(manejador->disco.solicitud, solicitud);
+            manejador->disco.estado = 1;
+            printf("Solicitud en el Disco: %s\n", solicitud);
+            break;
+        case 2:
+            strcpy(manejador->impresora.solicitud, solicitud);
+            manejador->impresora.estado = 1;
+            printf("Solicitud en la Impresora: %s\n", solicitud);
+            break;
+        case 3:
+            strcpy(manejador->teclado.solicitud, solicitud);
+            manejador->teclado.estado = 1;
+            printf("Solicitud en el Teclado: %s\n", solicitud);
+            break;
+        default:
+            printf("Dispositivo no valido.\n");
+            break;
+    }
+}
+
+
+void procesarSolicitudes(ManejadorDispositivos *manejador) {
+    if (manejador->disco.estado == 1) {
+        printf("Procesando solicitud en el Disco: %s\n", manejador->disco.solicitud);
+        manejador->disco.estado = 2;
+    }
+    if (manejador->impresora.estado == 1) {
+        printf("Procesando solicitud en la Impresora: %s\n", manejador->impresora.solicitud);
+        manejador->impresora.estado = 2;
+    }
+    if (manejador->teclado.estado == 1) {
+        printf("Procesando solicitud en el Teclado: %s\n", manejador->teclado.solicitud);
+        manejador->teclado.estado = 2;
+    }
+}
+
+
+void comunicacionEntreDispositivos(ManejadorDispositivos *manejador) {
+    printf("Comunicacion entre dispositivos:\n");
+    if (manejador->disco.estado == 2 && manejador->impresora.estado == 2) {
+        printf("El Disco ha completado su tarea. Comunicando con la Impresora...\n");
+        printf("La Impresora esta lista para imprimir.\n");
+    }
+    if (manejador->impresora.estado == 2 && manejador->teclado.estado == 2) {
+        printf("La Impresora ha completado la impresion. Comunicando con el Teclado...\n");
+        printf("El Teclado esta listo para recibir entrada.\n");
+    }
+}
+
+int main() {
+    ManejadorDispositivos manejador;
+    int dispositivo;
+    char solicitud[100];
+
+    inicializarDispositivos(&manejador);
+
+    while (1) {
+        printf("\nSeleccione una operacion:\n");
+        printf("1. Solicitar operacion en el Disco\n");
+        printf("2. Solicitar operacion en la Impresora\n");
+        printf("3. Solicitar operacion en el Teclado\n");
+        printf("4. Mostrar estado de los dispositivos\n");
+        printf("5. Procesar solicitudes\n");
+        printf("6. Simular comunicacion entre dispositivos\n");
+        printf("7. Salir\n");
+        printf("Opcion: ");
+        scanf("%d", &dispositivo);
+        getchar(); 
+
+        if (dispositivo == 7) {
+            break;
+        }
+
+        if (dispositivo >= 1 && dispositivo <= 3) {
+            printf("Ingrese la solicitud: ");
+            fgets(solicitud, sizeof(solicitud), stdin);
+            solicitud[strcspn(solicitud, "\n")] = 0;  
+            solicitarOperacion(&manejador, dispositivo, solicitud);
+        } else if (dispositivo == 4) {
+            mostrarEstado(&manejador);
+        } else if (dispositivo == 5) {
+            procesarSolicitudes(&manejador);
+        } else if (dispositivo == 6) {
+            comunicacionEntreDispositivos(&manejador);
+        } else {
+            printf("Opcion no valida.\n");
+        }
+    }
+
+    return 0;
+}
+
+```
+
+# Avanzados
+
+Explica cómo los sistemas operativos modernos optimizan las operaciones
+de entrada/salida con el uso de memoria caché.
+
+Los sistemas operativos modernos optimizan las operaciones de entrada/salida (E/S) mediante el uso de memoria caché para reducir el tiempo de acceso a los datos y mejorar el rendimiento general del sistema
+
+La memoria caché es un área de memoria rápida (normalmente en RAM) utilizada para almacenar temporalmente los datos que se han leído o que se escribirán en dispositivos más lentos, como discos duros o SSDs. 
+
+Beneficios del uso de caché en E/S:
+* Reducción de la latencia: La caché, al ser más rápida que los dispositivos de almacenamiento, permite acceder a los datos con mayor velocidad.
+
+* Disminución de accesos físicos: Al reducir la frecuencia de lecturas y escrituras en el disco, se extiende su vida útil y se mejora el rendimiento.
+
+* Optimización de recursos del sistema: Al agrupar operaciones, el sistema reduce la sobrecarga en la gestión de dispositivos.
+
+* Mejora en el rendimiento de aplicaciones: Procesos como la ejecución de aplicaciones o lectura/escritura de archivos se ven significativamente acelerados.
+
+
+## Referencias APA:
+
+a:, E. E. U. (s/f). Gestión de los recursos de un sistema operativo. Mheducation.es. Recuperado el 1 de diciembre de 2024, de https://www.mheducation.es/bcv/guide/capitulo/8448180321.pdf
+
+</div>
+
