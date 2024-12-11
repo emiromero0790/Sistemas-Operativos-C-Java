@@ -1572,7 +1572,7 @@ Nuevamente, se usó cat listado.txt para mostrar todo el contenido del archivo, 
 
 Este ejercicio permitió practicar la redirección de salida (> y >>) para gestionar datos de comandos en archivos como se muestra a continuación:
 
-
+![Redirección de entrada y salida](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/Redirecci%C3%B3nDeEntradaYSalida.jpeg)
 
 
 
