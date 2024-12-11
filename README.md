@@ -1554,4 +1554,26 @@ Transferir archivos a un dispositivo montado.
 Desmontar dispositivos para su retiro seguro.
 Con estos pasos, se logró una integración eficiente del hardware externo con la máquina virtual.
 
+## Ejercicio 2: Redirección de Entrada y Salida
+
+El objetivo de este ejercicio fue aprender a utilizar la redirección de entrada y salida en Linux para gestionar información en archivos.
+
+Listar archivos y guardar en un archivo:
+Se usó el comando ls -l > listado.txt para listar los archivos del directorio actual y guardar el resultado en el archivo listado.txt.
+
+Mostrar el contenido del archivo:
+Con cat listado.txt se mostró el contenido del archivo en la terminal.
+
+Añadir la fecha actual:
+Se agregó la fecha y hora actuales al final del archivo usando date >> listado.txt.
+
+Verificar el contenido actualizado:
+Nuevamente, se usó cat listado.txt para mostrar todo el contenido del archivo, ahora incluyendo la fecha.
+
+Este ejercicio permitió practicar la redirección de salida (> y >>) para gestionar datos de comandos en archivos como se muestra a continuación:
+
+
+
+
+
 
