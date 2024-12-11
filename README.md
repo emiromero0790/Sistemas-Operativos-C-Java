@@ -1542,10 +1542,9 @@ Identificar el dispositivo USB:
 
 Los comandos utilizados tanto para montar como desmontar el USB fueron los siguientes:
 
+![Comandos para montar y desmontar una USB](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/MontarYDesmontarUSBLinux.jpeg)
 
-
-
-Conclusión
+### Conclusión
 
 Este ejercicio permitió comprender el flujo completo para trabajar con dispositivos USB en una máquina virtual, incluyendo:
 
