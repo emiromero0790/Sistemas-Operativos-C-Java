@@ -1642,6 +1642,8 @@ Usando el comando du -sh, se calculó el espacio utilizado por el directorio /ho
 Resultado esperado:
 Al finalizar este ejercicio, se obtiene una visión clara del estado de los discos y particiones en el sistema, así como del uso del espacio en directorios importantes. Esto es útil para la administración y mantenimiento del sistema. Los comandos utilizados se muestran en la imagen:
 
+![Exploración de dispositivos imagen](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/Exploraci%C3%B3nDeDispositivos.png)
+
 
 
 
