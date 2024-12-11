@@ -1610,3 +1610,40 @@ Al intentar extraer el archivo comprimido, hubo un error debido a un nombre inco
 Resultado esperado: Los archivos del directorio backup se descomprimen en la ubicación actual, manteniendo la estructura y contenido original como se muestra a continuación:
 
 ![Comprimir y descomprimir archivos](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/ComprimirYDescomprimir.jpeg)
+
+## Ejercicio 5: Permisos y Propiedades de Archivos
+
+Objetivo: Aprender a modificar los permisos y propietarios de archivos en un sistema Linux.
+
+Crear un archivo:
+Se creó un archivo vacío llamado privado.txt utilizando el comando touch.
+
+Modificar permisos del archivo:
+Los permisos del archivo se configuraron para que solo el propietario pueda leer y escribir en él, utilizando el comando chmod 600. Esto establece los permisos como rw-------, restringiendo el acceso para otros usuarios.
+
+Cambiar el propietario del archivo:
+Se intentó cambiar el propietario del archivo a otro usuario utilizando el comando sudo chown. Este paso requiere privilegios de superusuario y que el usuario de destino exista en el sistema.
+
+Resultado esperado:
+El archivo privado.txt queda protegido con permisos limitados al propietario, y el propietario puede ser modificado si es necesario y si el usuario tiene los permisos adecuados.
+
+## Ejercicio 6: Exploración de Dispositivos
+Objetivo: Identificar discos y particiones en el sistema, así como explorar el uso del espacio en disco y directorios específicos.
+
+Listar discos y particiones:
+Se utilizó el comando lsblk para obtener una visión general de los dispositivos de almacenamiento y sus puntos de montaje. Esto permitió identificar la estructura del disco principal, que incluye particiones como /boot/efi y la raíz /.
+
+Verificar el uso de disco:
+Se empleó el comando df -h para mostrar el espacio total, utilizado y disponible en cada partición, presentado en un formato legible para humanos.
+
+Analizar el tamaño de directorios específicos:
+Usando el comando du -sh, se calculó el espacio utilizado por el directorio /home, mostrando el tamaño total en un formato comprensible. Este comando permite identificar directorios que consumen grandes cantidades de espacio.
+
+Resultado esperado:
+Al finalizar este ejercicio, se obtiene una visión clara del estado de los discos y particiones en el sistema, así como del uso del espacio en directorios importantes. Esto es útil para la administración y mantenimiento del sistema. Los comandos utilizados se muestran en la imagen:
+
+
+
+
+
+
