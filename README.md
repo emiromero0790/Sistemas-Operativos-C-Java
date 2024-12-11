@@ -1594,3 +1594,17 @@ Este ejercicio permitió familiarizarse con los comandos básicos de manipulaci�
 
 ![Copiar y mover archivos](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/CopiarYMoverArchivos.jpeg)
 
+
+## Ejercicio 4: Comprimir y Descomprimir Archivos con tar
+Objetivo: Aprender a empaquetar y descomprimir archivos utilizando la herramienta tar.
+
+Crear un directorio y copiar archivos:
+Se creó un directorio llamado backup. Luego, se copiaron los archivos archivo1.txt y archivo2.txt al directorio backup.
+
+Empaquetar y comprimir el directorio:
+Se creó un archivo comprimido llamado backup.tar.gz, el cual contiene todo el contenido del directorio backup.
+
+Descomprimir el archivo:
+Al intentar extraer el archivo comprimido, hubo un error debido a un nombre incorrecto al escribir backup.tar.gz. con un punto extra al final. Corrigiendo el comando, se descomprime correctamente para restaurar los archivos originales en su estructura original.
+
+Resultado esperado: Los archivos del directorio backup se descomprimen en la ubicación actual, manteniendo la estructura y contenido original como se muestra a continuación:
