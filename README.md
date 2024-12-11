@@ -1592,5 +1592,5 @@ Finalmente, se movió archivo2.txt de /tmp al directorio actual con mv.
 
 Este ejercicio permitió familiarizarse con los comandos básicos de manipulación de archivos en Linux como se muestra en la siguiente imagen:
 
-
+![Copiar y mover archivos](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/CopiarYMoverArchivos.jpeg)
 
