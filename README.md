@@ -1608,3 +1608,5 @@ Descomprimir el archivo:
 Al intentar extraer el archivo comprimido, hubo un error debido a un nombre incorrecto al escribir backup.tar.gz. con un punto extra al final. Corrigiendo el comando, se descomprime correctamente para restaurar los archivos originales en su estructura original.
 
 Resultado esperado: Los archivos del directorio backup se descomprimen en la ubicación actual, manteniendo la estructura y contenido original como se muestra a continuación:
+
+![Comprimir y descomprimir archivos](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/ComprimirYDescomprimir.jpeg)
