@@ -1515,4 +1515,44 @@ Beneficios del uso de caché en E/S:
 
 a:, E. E. U. (s/f). Gestión de los recursos de un sistema operativo. Mheducation.es. Recuperado el 1 de diciembre de 2024, de https://www.mheducation.es/bcv/guide/capitulo/8448180321.pdf
 
+# Comandos de Entrada y Salida, Discos y Archivos
+
+## Ejercicio 1: Montar y Desmontar Discos
+
+Este ejercicio tuvo como objetivo aprender a montar y desmontar dispositivos USB en una máquina virtual que ejecuta Linux Mint como sistema operativo invitado, utilizando VirtualBox como entorno de virtualización. Además, se incluyó el procedimiento para crear un filtro de USB en VirtualBox para que el dispositivo externo fuera reconocido dentro de la máquina virtual. A continuación, se detalla lo realizado:
+
+1. Preparar el dispositivo USB y el entorno virtual
+Conectar la USB al equipo anfitrión: Se insertó la memoria USB en el puerto correspondiente del equipo anfitrión.
+
+Configurar un filtro de USB en VirtualBox:
+* En el menú de VirtualBox, se seleccionó la máquina virtual de Linux Mint y se accedió a Configuración > USB.
+
+* Se activó el controlador de USB 2.0 o 3.0 (dependiendo del soporte del equipo).
+
+* Se añadió un filtro de dispositivo USB utilizando el botón con el ícono de "Agregar un nuevo filtro".
+
+* Se seleccionó el dispositivo correspondiente (la memoria USB) para asegurarse de que VirtualBox redirigiera automáticamente el dispositivo a la máquina virtual al conectarlo.
+
+2. Montar la memoria USB en Linux Mint
+Identificar el dispositivo USB:
+
+* Se utilizó el comando sudo fdisk -l para listar los discos disponibles y localizar la memoria USB. El dispositivo apareció identificado como /dev/sdb1 con un sistema de archivos FAT16.
+
+* Alternativamente, el comando lsblk ayudó a visualizar los puntos de montaje y particiones disponibles.
+
+Los comandos utilizados tanto para montar como desmontar el USB fueron los siguientes:
+
+
+
+
+Conclusión
+
+Este ejercicio permitió comprender el flujo completo para trabajar con dispositivos USB en una máquina virtual, incluyendo:
+
+Configurar un filtro de USB en VirtualBox para que el dispositivo sea reconocido.
+Identificar y montar dispositivos de almacenamiento en Linux.
+Transferir archivos a un dispositivo montado.
+Desmontar dispositivos para su retiro seguro.
+Con estos pasos, se logró una integración eficiente del hardware externo con la máquina virtual.
+
 
