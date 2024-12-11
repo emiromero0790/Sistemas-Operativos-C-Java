@@ -1574,6 +1574,23 @@ Este ejercicio permitió practicar la redirección de salida (> y >>) para gesti
 
 ![Redirección de entrada y salida](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/Redirecci%C3%B3nDeEntradaYSalida.jpeg)
 
+## Ejercicio 3: Copiar y Mover Archivos
+
+El objetivo de este ejercicio fue practicar la copia, el renombrado y el movimiento de archivos en Linux.
+
+Crear un archivo de texto:
+Se creó un archivo llamado archivo1.txt con el contenido "Este es un archivo de prueba" usando el comando echo.
+
+Copiar el archivo:
+El archivo archivo1.txt se copió al directorio /tmp con cp.
+
+Renombrar el archivo:
+El archivo copiado en /tmp fue renombrado a archivo2.txt usando mv.
+
+Mover el archivo de vuelta:
+Finalmente, se movió archivo2.txt de /tmp al directorio actual con mv.
+
+Este ejercicio permitió familiarizarse con los comandos básicos de manipulación de archivos en Linux como se muestra en la siguiente imagen:
 
 
 
