@@ -1820,9 +1820,41 @@ Desventajas:
 
 ## Ejercicio 3: Organización lógica y física de archivos
 
+![árbol jerárquico de directorios y subdirectorios](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/%C3%81rboljer%C3%A1rquicoDiretorios.png)
 
+### Pasos de la traducción de Dirección Lógica a Dirección Física en el Disco
+1. Sistema de Archivos y Metadatos:
+Cuando se solicita acceder a un archivo, el sistema de archivos (por ejemplo, EXT4 o NTFS) consulta las estructuras de metadatos como la Master File Table (MFT) en NTFS o los inodos en EXT4 para localizar los bloques o clusters donde están almacenados los datos.
 
+2. Asignación de Bloques o Clusters:
+Los archivos se dividen en fragmentos llamados bloques (en EXT4) o clusters (en NTFS). Los metadatos contienen referencias a estos bloques en el disco lógico.
 
+3. Controlador del Disco:
+El sistema operativo envía la dirección lógica a través del controlador del disco, que traduce esa dirección a un sector físico del disco usando tablas como la Tabla de Asignación de Archivos (FAT) o estructuras específicas del sistema de archivos.
+
+4. Acceso Físico:
+Finalmente, el controlador del disco convierte la dirección en coordenadas físicas (cilindro, cabezal y sector en discos mecánicos o celdas en SSD) y recupera o almacena los datos solicitados.
+
+### Ejemplo Práctico: Almacenamiento de un Archivo
+Escenario: Se almacena un archivo llamado documento.txt de 5 KB en un disco con EXT4, donde el tamaño de bloque es de 4 KB.
+
+Creación del Archivo:
+El sistema de archivos asigna un inodo al archivo, que contiene información como el nombre, tamaño, permisos, y una referencia a los bloques donde se almacenará el contenido.
+
+División en Bloques:
+El archivo de 5 KB se divide en dos partes:
+
+Los primeros 4 KB se almacenan en el primer bloque asignado.
+El 1 KB restante ocupa un segundo bloque.
+Almacenamiento Físico:
+Los bloques asignados se localizan físicamente en el disco. Por ejemplo:
+
+Bloque 1: Sector físico 1024
+
+Bloque 2: Sector físico 2048
+
+Referencia en los Metadatos:
+El inodo del archivo documento.txt guarda las direcciones lógicas de los bloques (Bloque 1 y Bloque 2). Cuando se necesita acceder al archivo, el sistema usa estas direcciones para ubicar los datos.
 
 
 
