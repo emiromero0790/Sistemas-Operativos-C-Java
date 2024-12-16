@@ -1645,6 +1645,142 @@ Al finalizar este ejercicio, se obtiene una visión clara del estado de los disc
 ![Exploración de dispositivos imagen](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/Exploraci%C3%B3nDeDispositivos.png)
 
 
+## Ejercicio 7: Crear y Formatear Particiones
+Objetivo: Aprender a crear, formatear y montar particiones en un sistema Linux utilizando herramientas como fdisk y mkfs.
+
+Identificar discos disponibles:
+Se utilizó el comando sudo fdisk -l para listar todos los discos y particiones presentes en el sistema, identificando un disco no particionado que se puede usar para la práctica.
+
+Crear una nueva partición:
+Con el comando sudo fdisk /dev/sdX, se accedió al menú de configuración del disco seleccionado. Se siguieron las instrucciones para crear una nueva partición, como elegir el tipo de partición y asignar el espacio.
+
+Formatear la partición:
+Una vez creada la partición, se formateó con el sistema de archivos ext4 usando el comando sudo mkfs.ext4 /dev/sdX1. Esto prepara la partición para almacenar datos.
+
+Montar la partición y probar su funcionalidad:
+La partición recién creada se montó en el directorio /mnt/nueva_particion utilizando sudo mount. Para verificar que la partición está operativa, se creó un archivo de prueba llamado test.txt con contenido escrito dentro de la partición.
+
+Resultado esperado:
+Al completar este ejercicio, se tiene una partición funcional, formateada y montada correctamente, lista para ser utilizada en el sistema. Este proceso es fundamental para la administración de almacenamiento en Linux, especialmente al trabajar con nuevos discos o en entornos virtuales.
+
+# Sistema de archivos
+## Ejercicio 1: Concepto y noción de archivo virtual y real
+* Archivo virtual:
+
+Es un archivo de uso temporal que es utilizado por los procesos del sistema mientras se están ejecutando dichos procesos.
+
+
+Estos archivos se crean durante la ejecución de un sistema y los utiliza para el almacenamiento de información, intercambio y organización mientras se ejecuta el sistema, su tamaño es muy variable y terminan al detener la ejecución del sistema, muchos de ellos son borrados, por ejemplo, los archivos *.tmp.
+
+* Archivo temporal:
+
+Es un objeto que contiene programas, datos o cualquier otro elemento. 
+
+Un archivo se muestra de manera real, en la información del espacio que ocupa en un disco duro o sistema de almacenamiento, en otras palabras, su tamaño es en bytes.
+
+### Referencias APA
+SISTEMAS OPERATIVOS. (s/f). Blogspot.com. Recuperado el 16 de diciembre de 2024, de https://so-sistemas-operativoss.blogspot.com/2017/12/52-nocion-de-archivo-real-y-virtual.html
+
+Ejemplos de manejo de archivos reales por el sistema operativo:
+
+* Creación y modificación: Al crear un archivo con touch o guardar un documento en un editor de texto, el sistema operativo organiza sus datos en sectores del disco.
+
+* Almacenamiento en diferentes sistemas de archivos: NTFS (Windows), ext4 (Linux), HFS+ (Mac).
+
+* Operaciones básicas: Copiar, mover, renombrar y eliminar archivos con herramientas como cp, mv, rm o mediante interfaces gráficas.
+
+Ejemplos de manejo de archivos virtuales por el sistema operativo:
+
+* Archivos en /proc: En Linux, el directorio /proc contiene archivos virtuales que representan información sobre procesos y el sistema, como /proc/cpuinfo o /proc/meminfo.
+
+* Archivos especiales en /dev: Dispositivos como discos, terminales y puertos son representados como archivos virtuales.
+
+* Tuberías (Pipes): Son archivos temporales usados para transferir datos entre procesos en tiempo real.
+
+Explica un caso práctico donde un archivo virtual sea más útil que un
+archivo real.
+
+Supongamos que un administrador de sistemas necesita información detallada sobre el rendimiento del sistema, como el uso de la CPU o la memoria RAM.
+
+Por qué un archivo virtual es útil:
+Acceso dinámico: El archivo virtual /proc/cpuinfo proporciona información actualizada al instante sobre el procesador. No hay necesidad de almacenar datos en disco, ya que se generan en memoria.
+Eficiencia: Leer archivos virtuales evita el uso de espacio en disco y reduce el tiempo necesario para acceder a datos dinámicos.
+Facilidad de análisis: Puede accederse a estos archivos con comandos simples como cat o grep, o ser procesados por herramientas de monitorización.
+
+## Ejercicio 2: Componentes de un sistema de archivos
+1. Metadatos:
+Definición: Información sobre los archivos y directorios, como su nombre, tamaño, propietario y permisos.
+Ejemplos:
+Fecha de creación, modificación y último acceso.
+Tipo de archivo (texto, binario, enlace simbólico, etc.).
+Propósito: Facilita la organización y gestión de archivos al proporcionar detalles esenciales sin acceder al contenido.
+
+2. Tablas de Asignación de Archivos (FAT, inodos, etc.):
+Definición: Estructuras que mantienen un seguimiento de qué bloques de datos en el almacenamiento pertenecen a qué archivos.
+Tipos comunes:
+FAT (File Allocation Table): Utilizado en sistemas FAT32 y exFAT.
+Inodos: Usados en sistemas de archivos como ext4.
+Master File Table (MFT): Usado por NTFS.
+Propósito: Mapea los archivos y directorios a las ubicaciones físicas de sus datos en el disco.
+
+3. Superbloque:
+Definición: Estructura de datos que almacena información sobre el sistema de archivos en su conjunto.
+Contenido:
+Tamaño total del sistema de archivos.
+Cantidad de bloques libres y utilizados.
+Ubicación de las tablas de asignación.
+Propósito: Ayuda al sistema operativo a entender cómo interactuar con el sistema de archivos.
+
+4. Directorios:
+Definición: Estructuras jerárquicas que organizan los archivos en carpetas.
+Contenido: Enlaces a archivos y subdirectorios, junto con sus identificadores (como inodos).
+Propósito: Facilita la navegación y agrupación lógica de archivos.
+
+5. Bloques de Datos:
+Definición: Fragmentos del disco donde se almacenan los datos reales de los archivos.
+Características:
+Los tamaños pueden variar según el sistema de archivos.
+Los archivos grandes suelen ocupar múltiples bloques.
+Propósito: Contienen el contenido binario o textual de los archivos.
+
+6. Journaling (Registro):
+Definición: Registro de transacciones realizado antes de efectuar cambios en el sistema de archivos.
+Ejemplo: Ext3, ext4 y NTFS.
+Propósito:
+Minimiza la pérdida de datos en caso de fallos del sistema.
+Facilita la recuperación después de un apagado inesperado.
+
+7. Espacio Libre:
+Definición: Áreas no asignadas del disco.
+Gestión:
+Sistemas como FAT mantienen una lista de bloques libres.
+Otros sistemas, como ext4, usan mapas de bits o listas enlazadas.
+Propósito: Permite al sistema operativo asignar espacio para nuevos archivos y expansión de los existentes.
+
+8. Puntos de Montaje:
+Definición: Lugares en el sistema de archivos donde se adjuntan particiones o discos externos.
+Ejemplo: En Linux, un disco adicional podría montarse en /mnt/disco.
+Propósito: Proporciona acceso lógico y unificado a múltiples dispositivos de almacenamiento.
+
+9. Estructuras de Indexación:
+Definición: Mecanismos para acelerar la búsqueda y recuperación de archivos.
+Ejemplo:
+Árboles B+ en NTFS.
+Tabla hash en ext4.
+Propósito: Mejora el rendimiento al acceder a archivos en sistemas grandes.
+
+10. Caché del Sistema de Archivos:
+Definición: Copias temporales de datos y metadatos almacenados en memoria para reducir la necesidad de acceso directo al disco.
+Propósito: Aumenta la velocidad de las operaciones de lectura y escritura.
+
+
+
+
+
+
+
+
+
 
 
 
