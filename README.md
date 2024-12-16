@@ -1773,6 +1773,54 @@ Propósito: Mejora el rendimiento al acceder a archivos en sistemas grandes.
 Definición: Copias temporales de datos y metadatos almacenados en memoria para reducir la necesidad de acceso directo al disco.
 Propósito: Aumenta la velocidad de las operaciones de lectura y escritura.
 
+![Cuadro comparativo de como funcionan los componentes en EXT4 y NTFS](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/CuadroComparativo.png)
+
+### EXT4
+Ventajas:
+
+* Eficiencia y rendimiento: EXT4 es rápido en operaciones básicas como lectura y escritura, gracias a su sistema de bloques y la técnica de extents, que reduce la fragmentación al almacenar archivos grandes.
+
+* Compatibilidad en Linux: Es el sistema de archivos predeterminado en distribuciones de Linux, con amplia integración y soporte nativo.
+
+* Journaling: Su sistema de registro garantiza la integridad de datos tras fallos de energía o errores del sistema.
+
+* Escalabilidad: Soporta volúmenes y archivos de gran tamaño (hasta 1 exabyte para volúmenes y 16 terabytes por archivo), lo que lo hace ideal para discos modernos.
+
+* Gestión de espacio libre: Utiliza mapas de bits que agilizan la asignación de bloques, mejorando el rendimiento general.
+
+Desventajas:
+
+* Interoperabilidad limitada: Aunque existen herramientas para usar EXT4 en Windows, su soporte fuera de Linux es limitado y menos eficiente.
+
+* Funcionalidades avanzadas: Carece de características nativas como la encriptación y la compresión, que están disponibles en NTFS.
+
+* Journaling básico: Aunque es efectivo, no es tan robusto como el USN Journal de NTFS, lo que puede limitar la recuperación en casos extremos.
+
+### NTFS
+
+Ventajas:
+
+* Robustez y características avanzadas: NTFS incluye soporte nativo para encriptación (EFS) y compresión de archivos, lo que mejora la seguridad y optimiza el uso del espacio.
+
+* Journaling avanzado: Su USN Journal ofrece un registro detallado de cambios en archivos, mejorando la recuperación tras errores o interrupciones.
+
+* Compatibilidad con grandes volúmenes: Diseñado para manejar discos de alta capacidad, NTFS es ideal para servidores y sistemas de almacenamiento masivo.
+
+* Interoperabilidad: Es el sistema de archivos predeterminado en Windows y puede ser usado en Linux y macOS con herramientas adecuadas, aunque con limitaciones en características avanzadas.
+
+Desventajas:
+
+* Complejidad: La gestión de sus estructuras, como la Master File Table (MFT), puede generar una mayor sobrecarga en sistemas con recursos limitados.
+
+* Fragmentación: Aunque NTFS maneja bien la fragmentación, puede volverse un problema con el tiempo, requiriendo herramientas de desfragmentación.
+
+* Rendimiento en Linux: Aunque compatible, su uso en sistemas Linux puede ser menos eficiente y más propenso a errores en comparación con EXT4.
+
+* Espacio en disco: Sus estructuras de journaling y metadatos ocupan más espacio, lo que puede ser una desventaja en discos pequeños.
+
+## Ejercicio 3: Organización lógica y física de archivos
+
+
 
 
 
