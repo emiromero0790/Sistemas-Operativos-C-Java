@@ -1856,6 +1856,170 @@ Bloque 2: Sector físico 2048
 Referencia en los Metadatos:
 El inodo del archivo documento.txt guarda las direcciones lógicas de los bloques (Bloque 1 y Bloque 2). Cuando se necesita acceder al archivo, el sistema usa estas direcciones para ubicar los datos.
 
+## Ejercicio 4: Mecanismos de acceso a los archivos
+
+### Acceso Secuencial
+En este mecanismo, los datos se leen o escriben en un orden lineal, desde el principio hasta el final, como si fuera una cinta.
+
+Características:
+
+Los datos deben accederse en el orden en que están almacenados.
+Es ideal para operaciones continuas o flujos de datos, como la reproducción de video o el análisis de registros.
+Ventajas:
+
+Simple y eficiente para grandes volúmenes de datos que se procesan de manera lineal.
+Menos sobrecarga en términos de gestión de almacenamiento.
+Desventajas:
+
+Poco eficiente si se necesita acceder a datos aleatorios o específicos.
+Ejemplo práctico: Leer un archivo de registro (log.txt) desde el principio hasta el final para analizar eventos.
+
+### Acceso Directo (Aleatorio)
+Permite acceder directamente a cualquier ubicación en el almacenamiento sin necesidad de seguir un orden específico.
+
+Características:
+
+Cada dato tiene una dirección única que se puede usar para acceder directamente.
+Común en discos duros (HDD), discos sólidos (SSD) y sistemas de bases de datos.
+Ventajas:
+
+Muy eficiente para acceder rápidamente a datos específicos.
+Ideal para aplicaciones como bases de datos o sistemas operativos.
+Desventajas:
+
+Mayor complejidad en la gestión de direcciones de memoria.
+Puede ser menos eficiente para grandes volúmenes de datos si el patrón de acceso no está optimizado.
+Ejemplo práctico: Leer un registro específico en una base de datos utilizando su clave primaria.
+
+### Acceso Indexado
+Utiliza un índice para localizar rápidamente los datos almacenados. El índice actúa como una tabla que contiene referencias a las ubicaciones de los datos.
+
+Características:
+
+Se utiliza un índice intermedio para facilitar el acceso.
+Común en sistemas de archivos modernos y bases de datos.
+Ventajas:
+
+Rápido acceso a grandes volúmenes de datos bien organizados.
+Optimizado para sistemas que requieren búsquedas frecuentes.
+Desventajas:
+
+La creación y mantenimiento del índice puede requerir espacio adicional y recursos computacionales.
+Si el índice se daña, puede dificultar el acceso a los datos.
+Ejemplo práctico: Un sistema de archivos como NTFS utiliza índices para localizar archivos rápidamente.
+
+### Acceso por Mapeo de Memoria
+Los datos se asignan directamente a la memoria del sistema, lo que permite que las aplicaciones los accedan como si fueran parte de la memoria principal.
+
+Características:
+
+La lectura y escritura se realizan directamente en la memoria.
+Utilizado para mejorar el rendimiento en sistemas modernos.
+Ventajas:
+
+Extremadamente rápido, ya que elimina la necesidad de operaciones de E/S adicionales.
+Ideal para trabajar con archivos grandes que se procesan en segmentos.
+Desventajas:
+
+Puede consumir mucha memoria si los datos no están bien gestionados.
+No es ideal para dispositivos con recursos limitados.
+Ejemplo práctico: Un sistema operativo mapea un archivo de intercambio (swap) en la memoria virtual.
+
+### Acceso en Red
+Permite acceder a los datos almacenados en ubicaciones remotas mediante protocolos como NFS, SMB o FTP.
+
+Características:
+
+Se accede a los datos a través de una red en lugar de un dispositivo local.
+Común en servidores de almacenamiento y sistemas distribuidos.
+Ventajas:
+
+Facilita la colaboración y el acceso remoto.
+Escalable para grandes infraestructuras.
+Desventajas:
+
+Dependencia de la conexión de red.
+Mayor latencia en comparación con el almacenamiento local.
+Ejemplo práctico: Un usuario accede a un archivo compartido en un servidor remoto mediante NFS.
+
+
+### Acceso secuencial pseudocódigo:
+```
+Abrir archivo "datos.txt" en modo lectura
+Mientras NO EOF (fin del archivo):
+    línea = Leer línea del archivo
+    Mostrar línea
+Cerrar archivo
+```
+
+### Acceso directo mediante su posición pseudocódigo:
+```
+Abrir archivo "datos.bin" en modo lectura
+posición = 1024  # Saltar al byte 1024
+Mover cursor a posición
+datos = Leer 128 bytes desde posición
+Mostrar datos
+Cerrar archivo
+```
+
+### Acceso utilizando un índice psuedocódigo:
+```
+Abrir archivo "índice.txt" en modo lectura
+Abrir archivo "datos.txt" en modo lectura
+Clave = Solicitar clave al usuario
+posición = Buscar Clave en índice
+Si posición != NULL:
+    Mover cursor a posición
+    datos = Leer línea en esa posición
+    Mostrar datos
+Sino:
+    Mostrar "Clave no encontrada"
+Cerrar archivos
+```
+
+### Comparación de ventajas de los diferentes mecanismos de acceso:
+
+1. Acceso Secuencial
+
+Ventajas:
+
+Ideal para datos que se leen o procesan de manera lineal, como registros o archivos de texto grandes.
+Simplicidad en el código y manejo.
+Eficiente para operaciones de lectura continua.
+
+Casos de Uso:
+Procesamiento de datos de registro o archivos de log.
+Análisis de grandes volúmenes de datos que se acceden de principio a fin.
+
+2. Acceso Directo
+
+Ventajas:
+
+Permite saltar directamente a cualquier ubicación del archivo sin necesidad de recorrerlo desde el principio.
+Rápido acceso a datos específicos, útil en bases de datos y sistemas que requieren acceso aleatorio.
+
+Casos de Uso:
+
+Bases de datos y sistemas de almacenamiento donde se necesita acceso directo a registros.
+Archivos binarios grandes donde los datos no se leen en orden lineal.
+
+3. Acceso por Índice
+
+Ventajas:
+
+Rápido acceso a datos usando claves o referencias, lo cual es más eficiente para búsquedas frecuentes.
+Optimizado para sistemas que manejan datos estructurados o tablas, como sistemas de archivos y bases de datos relacionales.
+
+Casos de Uso:
+
+Bases de datos con índices que mejoran las consultas.
+Sistemas de archivos como NTFS o Ext4 donde se utiliza el sistema de índice para localizar archivos rápidamente.
+
+
+
+
+
+
 
 
 
