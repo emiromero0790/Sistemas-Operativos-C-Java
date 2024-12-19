@@ -1539,6 +1539,8 @@ Conocer los dispositivos de entrada y salida conectados al sistema.
 #### 4. Comando `dmesg | grep usb`
 - **Salida:** Muestra mensajes del kernel relacionados con dispositivos USB, como la detección de dispositivos o errores.
 
+![Dispositivos conectados](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/DispositivosConectados.png)
+
 ### Respuestas
 
 1. **¿Qué tipos de dispositivos se muestran en la salida de `lsblk`?**
