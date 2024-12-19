@@ -1567,6 +1567,8 @@ Conocer los dispositivos de entrada y salida conectados al sistema.
 #### 3. Comando `df -h`
 - **Salida:** Lista dispositivos montados, su espacio usado, disponible y punto de montaje.
 
+![Dispositivos de almacenamiento](https://github.com/emiromero0790/Sistemas-Operativos-C-Java/blob/master/DispositivosAlmacenamiento.png)
+
 ### Respuestas
 
 1. **¿Qué dispositivos de almacenamiento están conectados a su sistema?**
