@@ -1515,6 +1515,159 @@ Beneficios del uso de caché en E/S:
 
 a:, E. E. U. (s/f). Gestión de los recursos de un sistema operativo. Mheducation.es. Recuperado el 1 de diciembre de 2024, de https://www.mheducation.es/bcv/guide/capitulo/8448180321.pdf
 
+# Actividades: Dispositivos de entrada y salida en Linux
+
+# Reporte de Actividades: Manejo de Dispositivos en Linux
+
+## Actividad 1: Listar dispositivos conectados
+
+### Objetivo
+Conocer los dispositivos de entrada y salida conectados al sistema.
+
+### Observaciones
+
+#### 1. Comando `lsblk`
+- **Salida:** Enumera los dispositivos de bloque como discos duros, particiones y unidades extraíbles.
+- **Tipos de dispositivos mostrados:** Discos duros, particiones, unidades USB montadas.
+
+#### 2. Comando `lsusb`
+- **Salida:** Lista los dispositivos conectados a los puertos USB como ratones, teclados, cámaras y discos externos.
+
+#### 3. Comando `lspci`
+- **Salida:** Muestra dispositivos conectados al bus PCI, como tarjetas de red, tarjetas gráficas y controladores.
+
+#### 4. Comando `dmesg | grep usb`
+- **Salida:** Muestra mensajes del kernel relacionados con dispositivos USB, como la detección de dispositivos o errores.
+
+### Respuestas
+
+1. **¿Qué tipos de dispositivos se muestran en la salida de `lsblk`?**
+   - Discos duros, particiones, dispositivos de almacenamiento extraíble.
+
+2. **¿Cuál es la diferencia entre `lsusb` y `lspci`?**
+   - `lsusb` muestra dispositivos conectados al bus USB, mientras que `lspci` lista dispositivos conectados al bus PCI.
+
+3. **¿Qué información adicional proporciona `dmesg | grep usb`?**
+   - Detalles del kernel sobre el estado, errores y eventos relacionados con dispositivos USB.
+
+---
+
+## Actividad 2: Verificar dispositivos de almacenamiento
+
+### Observaciones
+
+#### 1. Comando `fdisk -l`
+- **Salida:** Lista todos los discos, particiones y sus tamaños.
+
+#### 2. Comando `blkid`
+- **Salida:** Muestra UUID, etiquetas y tipos de sistemas de archivos de cada partición.
+
+#### 3. Comando `df -h`
+- **Salida:** Lista dispositivos montados, su espacio usado, disponible y punto de montaje.
+
+### Respuestas
+
+1. **¿Qué dispositivos de almacenamiento están conectados a su sistema?**
+   - Discos principales (sda) y dispositivos USB si están conectados.
+
+2. **¿Qué particiones están montadas actualmente?**
+   - Las particiones del sistema raíz `/` y `/boot/efi` están montadas.
+
+3. **¿Qué tipo de sistemas de archivos se usan en las particiones?**
+   - `ext4` para particiones Linux y `vfat` para particiones de arranque UEFI.
+
+---
+
+## Actividad 3: Explorar dispositivos de entrada
+
+### Observaciones
+
+#### 1. Comando `cat /proc/bus/input/devices`
+- **Salida:** Lista dispositivos de entrada como teclados, ratones y controladores adicionales.
+
+#### 2. Comando `evtest`
+- **Salida:** Muestra eventos generados por los dispositivos cuando se interactúa con ellos.
+
+### Respuestas
+
+1. **¿Qué eventos genera cada dispositivo al interactuar con ellos?**
+   - Teclado: Eventos de pulsación y liberación de teclas.
+   - Mouse: Movimientos, clics y desplazamientos.
+   - Controladores USB: Conexión y desconexión.
+
+2. **¿Cómo se identifican los dispositivos en `/proc/bus/input/devices`?**
+   - Por nombre, tipo y controlador asociado.
+
+---
+
+## Actividad 4: Examinar dispositivos de salida
+
+### Observaciones
+
+#### 1. Comando `xrandr`
+- **Salida:** Lista las pantallas conectadas, resoluciones disponibles y configuraciones actuales.
+
+#### 2. Comando `aplay -l`
+- **Salida:** Lista tarjetas de sonido disponibles y dispositivos asociados.
+
+#### 3. Comando `lsof /dev/snd/*`
+- **Salida:** Muestra procesos que están utilizando la tarjeta de sonido.
+
+### Respuestas
+
+1. **¿Qué salidas de video están disponibles en su sistema?**
+   - Pantalla primaria y cualquier monitor secundario conectado.
+
+2. **¿Qué dispositivos de sonido se detectaron?**
+   - Tarjetas de sonido integradas y dispositivos de audio USB si están conectados.
+
+3. **¿Qué procesos están usando la tarjeta de sonido?**
+   - Reproductores multimedia y sistemas de notificación.
+
+---
+
+## Actividad 5: Crear un script de resumen
+
+### Observaciones
+#### Script `dispositivos.sh`
+
+```bash
+echo "Dispositivos de bloque:"
+lsblk
+echo "Dispositivos USB:"
+lsusb
+echo "Dispositivos PCI:"
+lspci
+echo "Dispositivos de entrada:"
+cat /proc/bus/input/devices
+echo "Salidas de video:"
+xrandr
+echo "Tarjetas de sonido:"
+aplay -l
+```
+### Respuestas
+¿Qué ventajas tiene usar un script para recopilar esta información?
+
+Automatización, facilidad de uso y consistencia en la recopilación de datos.
+¿Qué cambios realizaría para personalizar el script?
+
+Incluir marcas de tiempo, separar la salida por tipo de dispositivo en archivos individuales.
+
+---
+
+## Actividad 6: Reflexión y discusión
+### Respuestas
+¿Qué comando encontró más útil y por qué?
+
+lsblk, porque proporciona una vista clara de los dispositivos de almacenamiento y sus particiones.
+¿Qué tan importante es conocer los dispositivos conectados al sistema?
+
+Es crucial para diagnosticar problemas, configurar nuevos dispositivos y optimizar el sistema.
+¿Cómo podrían estos conocimientos aplicarse en la administración de sistemas?
+
+Permite una gestión eficiente de hardware, diagnóstico de errores y planificación de actualizaciones.
+
+
 # Comandos de Entrada y Salida, Discos y Archivos
 
 ## Ejercicio 1: Montar y Desmontar Discos
